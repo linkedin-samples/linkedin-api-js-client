@@ -193,11 +193,13 @@ export interface LIBatchGetResponse extends AxiosResponse {
   };
 }
 
-export interface LIGetAllResponse extends AxiosResponse {
+export interface LICollectionResponse extends AxiosResponse {
   data: {
-    /** List of entities */
+    /** List of entities returned in the response. */
     elements: RestliEntity[];
     paging?: PagingObject;
+    /** Optional response metadata. */
+    metadata?: any;
   };
 }
 
@@ -221,20 +223,6 @@ export interface LIBatchCreateResponse extends AxiosResponse {
 }
 
 export interface LIPartialUpdateResponse extends AxiosResponse {}
-
-export interface LIBatchPartialUpdateResponse extends AxiosResponse {
-  data: {
-    /** A map of entities and their corresponding response status. */
-    results: Record<
-      EncodedEntityId,
-      {
-        status: number;
-      }
-    >;
-    /** A map where the keys are the encoded entity ids that failed to be updated, and the values include the error response. */
-    errors: Record<EncodedEntityId, any>;
-  };
-}
 
 export interface LIUpdateResponse extends AxiosResponse {}
 
@@ -265,14 +253,6 @@ export interface LIBatchDeleteResponse extends AxiosResponse {
     >;
     /** A map where the keys are the encoded entity ids that failed to be deleted, and the values include the error response. */
     errors: Record<EncodedEntityId, any>;
-  };
-}
-
-export interface LIFinderResponse extends AxiosResponse {
-  data: {
-    /** An array of entities found based on the search criteria */
-    elements: RestliEntity[];
-    paging?: PagingObject;
   };
 }
 
@@ -449,7 +429,7 @@ export class RestliClient {
     queryParams = {},
     versionString = null,
     additionalConfig = {}
-  }: LIGetAllRequestOptions): Promise<LIGetAllResponse> {
+  }: LIGetAllRequestOptions): Promise<LICollectionResponse> {
     const urlPath = buildRestliUrl(resourcePath, pathKeys, versionString);
     const encodedQueryParamString = encodeQueryParamsForGetRequests(queryParams);
 
@@ -497,7 +477,7 @@ export class RestliClient {
     versionString = null,
     accessToken,
     additionalConfig = {}
-  }: LIFinderRequestOptions): Promise<LIFinderResponse> {
+  }: LIFinderRequestOptions): Promise<LICollectionResponse> {
     const urlPath = buildRestliUrl(resourcePath, pathKeys, versionString);
     const encodedQueryParamString = encodeQueryParamsForGetRequests({
       q: finderName,
@@ -793,7 +773,7 @@ export class RestliClient {
     versionString = null,
     accessToken,
     additionalConfig = {}
-  }: LIBatchPartialUpdateRequestOptions): Promise<LIBatchPartialUpdateResponse> {
+  }: LIBatchPartialUpdateRequestOptions): Promise<LIBatchUpdateResponse> {
     const urlPath = buildRestliUrl(resourcePath, pathKeys, versionString);
 
     if (patchSetObjects) {
