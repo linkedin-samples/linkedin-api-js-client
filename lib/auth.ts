@@ -32,6 +32,10 @@ export interface AccessToken3LResponse {
   refresh_token_expires_in?: number;
   /** A comma-separated list of scopes authorized by the member (e.g. "r_liteprofile,r_ads") */
   scope: string;
+  /** returned when the `openid` scope is sepecified A JSON Web Token (JWT). */
+  id_token?: string;
+  /** usually a `Bearer` token */
+  token_type?: string;
 }
 
 enum TokenAuthType {
